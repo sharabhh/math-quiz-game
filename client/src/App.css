@@ -4,6 +4,11 @@
   justify-content: center;
   align-items: center;
 }
+.active-users{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
 .dialogue-box {
   padding: 2rem;
   display: flex;

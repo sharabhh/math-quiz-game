@@ -91,7 +91,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <h1>active users: {activeUsers}</h1>
+        <h1 className="active-users">active users: {activeUsers}</h1>
         {/* when user hasn't eneterd a name */}
         <section className="dialogue-box">
           {userExists ? (
