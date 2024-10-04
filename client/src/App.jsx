@@ -33,7 +33,7 @@ function App() {
       setWinner(data?.winner);
       setCountdown(data?.countdown);
       if (data?.winner === newSocket.id) {
-        setHighScore((prev) => prev + 1);
+        setHighScore(highScore+1);
       }
     });
 
