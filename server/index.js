@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import http from "http";
-import path from "path";
 import cors from "cors";
 import { Server } from "socket.io";
 import { config } from "dotenv";
@@ -49,15 +48,6 @@ const nextQuestionDelay = 3000;
 
 let activeUsers = 0;
 
-// app.get("/", async (req, res) => {
-//   // server wasn't able to generate a question
-//   if (!currentQuestion) {
-//     res.status(503).json({ msg: "server wasn't able to generate a question." });
-//   }
-
-//   res.status(200).json({ question: currentQuestion.question });
-// });
-
 // socket.io stuff
 io.on("connection", async (socket) => {
   console.log("A new user has connected", socket.id);
@@ -89,9 +79,23 @@ io.on("connection", async (socket) => {
         { $inc: { highScore: 1 } }
       );
 
+      // finds name of winner
+      async function winnnerName(id) {
+        const user = await User.findOne({ socketId: id });
+        if (user) {
+          return user.name;
+        } else {
+          return null;
+        }
+      }
+
+      const winnerNameFromDb = await winnnerName(socket.id);
+      console.log(winnerNameFromDb);
+      
+
       // notify users
       io.emit("winner-announcement", {
-        winner: socket.id,
+        winner: winnerNameFromDb || socket.id,
         countdown: nextQuestionDelay / 1000,
       });
 
