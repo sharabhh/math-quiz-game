@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import https from "https";
+import http from "http";
 import cors from "cors";
 import { Server } from "socket.io";
 import { config } from "dotenv";
@@ -9,7 +9,7 @@ import User from "./model.js";
 import { count } from "console";
 
 const app = express();
-const server = https.createServer(app);
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
