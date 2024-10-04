@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
-import axios from "axios";
 
 function App() {
   const [socket, setSocket] = useState("");
@@ -11,19 +10,13 @@ function App() {
   const [highScore, setHighScore] = useState(0);
   const [countdown, setCountdown] = useState(0);
   const [activeUsers, setActiveUsers] = useState(0);
-  // const [newQuestionCheck, setNewQuestionCheck] = useState(false); //boolean for whether the question is new or old
+  const [username, setUsername] = useState("")
 
-  const baseUrl = import.meta.env.VITE_BACKEND_URL;
-
-  // async function fetchQuestion() {
-  //   const response = await axios.get(baseUrl); //remove later*****************************************************
-  //   setNewQuestion(response?.data?.question);
-  // }
+  const baseUrl = import.meta.env.VITE_BACKEND_URL
 
   useEffect(() => {
-    // fetchQuestion();
     // establish a dual modality connection with backend
-    const newSocket = io.connect("http://localhost:9000");
+    const newSocket = io.connect(baseUrl);
     setSocket(newSocket);
 
     newSocket.emit("request-question");
@@ -64,13 +57,20 @@ function App() {
   }, [countdown]);
 
   function handleChange(e) {
-    setAnswer(e.target.value);
+    const {name, value} = e.target
+
+    if(name === "username"){
+      setUsername(value)
+    }else if(name=== "answer"){
+      setAnswer(value)
+    }
   }
 
   function handleClick() {
     if (socket) {
-      socket.emit("user-answer", answer);
-      console.log("submitted answer: ", answer);
+      socket.emit("user-name", username)
+      // socket.emit("user-answer", answer);
+      console.log(`submitted answer: ${answer} by ${username}`);
     } else {
       console.log("answer wasn't submitted");
     }
@@ -85,9 +85,18 @@ function App() {
         <section className="dialogue-box">
           <h1>what is {newQuestion}?</h1>
           <input
+            type="text"
+            className="input-box"
+            onChange={handleChange}
+            name="username"
+            value={username}
+            placeholder="your name"
+          />
+          <input
             className="input-box"
             type="text"
             onChange={handleChange}
+            name="answer"
             value={answer}
             placeholder="your answer"
           />

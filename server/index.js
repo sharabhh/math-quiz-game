@@ -47,7 +47,7 @@ let isAnswered = false;
 let timeoutId;
 const nextQuestionDelay = 3000;
 
-let activeUsers = 0
+let activeUsers = 0;
 
 // app.get("/", async (req, res) => {
 //   // server wasn't able to generate a question
@@ -63,7 +63,7 @@ io.on("connection", async (socket) => {
   console.log("A new user has connected", socket.id);
   activeUsers++;
 
-  io.emit("active-users", {count: activeUsers})
+  io.emit("active-users", { count: activeUsers });
 
   const user = await User.findOneAndUpdate(
     { socketId: socket.id },
@@ -73,6 +73,11 @@ io.on("connection", async (socket) => {
 
   socket.on("request-question", () => {
     socket.emit("new-question", { question: currentQuestion.question });
+  });
+
+  socket.on("user-name", async (username) => {
+    console.log(username);
+    await User.findOneAndUpdate({ socketId: socket.id }, { name: username });
   });
 
   socket.on("user-answer", async (answer) => {
@@ -85,7 +90,10 @@ io.on("connection", async (socket) => {
       );
 
       // notify users
-      io.emit("winner-announcement", { winner: socket.id, countdown: nextQuestionDelay/1000 });
+      io.emit("winner-announcement", {
+        winner: socket.id,
+        countdown: nextQuestionDelay / 1000,
+      });
 
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -107,7 +115,7 @@ io.on("connection", async (socket) => {
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
     activeUsers--;
-    io.emit("active-users", {count: activeUsers})
+    io.emit("active-users", { count: activeUsers });
   });
 });
 
