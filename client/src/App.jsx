@@ -17,9 +17,7 @@ function App() {
 
   useEffect(() => {
     // establish a dual modality connection with backend
-    const newSocket = io.connect(baseUrl,{
-      transport: ['websocket']
-    });
+    const newSocket = io.connect(baseUrl);
     setSocket(newSocket);
 
     newSocket.emit("request-question");
