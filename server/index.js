@@ -123,4 +123,8 @@ io.on("connection", async (socket) => {
   });
 });
 
+app.get('/', (req,res)=>{
+  res.send('server is running')
+})
+
 server.listen(9000, () => console.log("server running on port 9000"));
