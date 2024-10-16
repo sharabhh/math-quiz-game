@@ -95,7 +95,8 @@ io.on("connection", async (socket) => {
 
       // notify users
       io.emit("winner-announcement", {
-        winner: winnerNameFromDb || socket.id,
+        winnerId: socket.id,
+        winnerName: winnerNameFromDb,
         countdown: nextQuestionDelay / 1000,
       });
 

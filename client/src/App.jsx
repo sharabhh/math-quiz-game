@@ -30,10 +30,14 @@ function App() {
     });
 
     newSocket.on("winner-announcement", (data) => {
-      setWinner(data?.winner);
+      setWinner(data?.winnerName);
       setCountdown(data?.countdown);
-      if (data?.winner === newSocket.id) {
-        setHighScore(highScore+1);
+      if (data?.winnerId === newSocket.id) {
+        setHighScore((prevScore)=> prevScore+1);
+      }
+      else{
+        console.log('not verified');
+        
       }
     });
 
